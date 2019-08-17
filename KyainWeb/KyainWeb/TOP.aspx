@@ -11,6 +11,14 @@
     <form id="form1" runat="server">
         <div>
         </div>
+        <asp:FileUpload ID="FileUpload" runat="server" Height="34px" Width="538px" />
+        <p>
+            <asp:Button ID="JudgeButton" runat="server" Height="65px" Text="判定ボタン" Width="542px" />
+        </p>
+        <asp:Panel ID="Panel" runat="server">
+            <asp:TextBox ID="ScoreBox" runat="server"></asp:TextBox>
+            <asp:Image ID="OriginalImage" runat="server" Width="205px" />
+        </asp:Panel>
     </form>
 </body>
 </html>
