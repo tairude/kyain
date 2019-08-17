@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="test.aspx.cs" Inherits="KyainWeb.test" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TOP.aspx.cs" Inherits="KyainWeb.TOP" %>
 
 <!DOCTYPE html>
 

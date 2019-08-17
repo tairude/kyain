@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace KyainWeb
 {
-    public partial class test : System.Web.UI.Page
+    public partial class TOP : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
