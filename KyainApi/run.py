@@ -18,34 +18,32 @@ formatter = logging.Formatter('[%(asctime)s] [%(name)s] [%(levelname)s] %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+def cos_sim(v1, v2):
+    return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='tf-pose-estimation run')
-    parser.add_argument('--image', type=str, default='./images/p1.jpg')
-    parser.add_argument('--model', type=str, default='cmu',
-                        help='cmu / mobilenet_thin / mobilenet_v2_large / mobilenet_v2_small')
-    parser.add_argument('--resize', type=str, default='0x0',
-                        help='if provided, resize images before they are processed. '
-                             'default=0x0, Recommends : 432x368 or 656x368 or 1312x736 ')
-    parser.add_argument('--resize-out-ratio', type=float, default=4.0,
-                        help='if provided, resize heatmaps before they are post-processed. default=1.0')
+    config = {
+        'image':'./images/kyain_1_2.jpg',
+        'model':'mobilenet_thin',
+        'resize':'432x368',
+        'resize_out_ratio': 4.0,
+    }
 
-    args = parser.parse_args()
+    vec_i = [(0,1),(4,3),(3,2),(2,5),(5,6),(6,7),(2,8),(5,11),(8,9),(9,10),(11,12),(12,13)]
 
-    w, h = model_wh(args.resize)
-    if w == 0 or h == 0:
-        e = TfPoseEstimator(get_graph_path(args.model), target_size=(432, 368))
-    else:
-        e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
+    w, h = model_wh(config['resize'])
+    e = TfPoseEstimator(get_graph_path(config['model']), target_size=(w, h)) 
 
     # estimate human poses from a single image !
-    image = common.read_imgfile(args.image, None, None)
+    image = common.read_imgfile(config['image'], None, None)
+
     if image is None:
-        logger.error('Image can not be read, path=%s' % args.image)
+        logger.error('Image can not be read, path=%s' % config['image'])
         sys.exit(-1)
 
     t = time.time()
-    humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
+    humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=config['resize_out_ratio'])
     elapsed = time.time() - t
     human_pts_list = np.zeros((len(humans),18,2))
     image_h, image_w = image.shape[:2]
@@ -53,16 +51,34 @@ if __name__ == '__main__':
         # draw point
         for i in range(common.CocoPart.Background.value):
             if i not in human.body_parts.keys():
-                center = -1,-1
+                body_part.x = 0
+                body_part.y = 0
+            else:
+                body_part = human.body_parts[i]
 
-            body_part = human.body_parts[i]
             center = (int(body_part.x * image_w + 0.5), int(body_part.y * image_h + 0.5))
             human_pts_list[hid,i,0] = center[0]
             human_pts_list[hid,i,1] = center[1]
            
     print(human_pts_list)
 
-    logger.info('inference image: %s in %.4f seconds.' % (args.image, elapsed))
+    vec_list = np.zeros((len(humans),12,2))
+    for hid in range(len(humans)):
+        for (v,i)in zip(vec_i,range(12)):
+            vec_list[hid,i,0] = human_pts_list[hid,v[0],0] - human_pts_list[hid,v[1],0]
+            vec_list[hid,i,1] = human_pts_list[hid,v[0],1] - human_pts_list[hid,v[1],1]
+
+
+    print(vec_list)
+
+    cos_list = np.zeros(12)
+    for i in range(12):
+        cos_list[i] = cos_sim(vec_list[0,i],vec_list[1,i])
+        
+    print(cos_list)
+    print('score:',np.mean(cos_list))
+
+    logger.info('inference image: %s in %.4f seconds.' % (config['image'], elapsed))
 
     image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
