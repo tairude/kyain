@@ -1,0 +1,44 @@
+﻿/*見出し*/
+h1 {
+    text-align: center;
+    font-weight: bold;
+}
+}
+
+.gameScreen {
+    text-align: center;
+}
+
+
+.JudgeButton {
+    display: inline-block;
+    text-decoration: none;
+    background: #87befd;
+    color: #FFF;
+    width: 120px;
+    height: 120px;
+    line-height: 120px;
+    border-radius: 50%;
+    text-align: center;
+    overflow: hidden;
+    transition: .4s;
+}
+
+.JudgeButton:hover {
+   background: #668ad8;
+}
+
+.box2 {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    font-weight: bold;
+    color: #6091d3; /*文字色*/
+    background: #FFF;
+    border: solid 3px #6091d3; /*線*/
+    border-radius: 10px; /*角の丸み*/
+}
+
+    .box2 p {
+        margin: 0;
+        padding: 0;
+    }
