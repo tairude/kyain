@@ -13,5 +13,17 @@ namespace KyainWeb
         {
 
         }
+
+        private void JudgeButton_Click(object sender, System.EventArgs e)
+        {
+            HttpPostedFile posted = Request.Files["userfile"];
+
+            if (posted.FileName != "")
+            {
+                posted.SaveAs(
+                  "c:\\UploadedFiles\\"
+                  + System.IO.Path.GetFileName(posted.FileName));
+            }
+        }
     }
 }
