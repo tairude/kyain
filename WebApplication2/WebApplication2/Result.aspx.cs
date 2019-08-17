@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -12,10 +13,17 @@ namespace WebApplication2
         protected void Page_Load( object sender, EventArgs e )
         {
             // 点数を表示する。
-
+            string score = Request.QueryString[ "score" ];
+            ScoreLabel.Text = score;
 
             // キャプチャーした写真と、解析結果画像を表示する。
+            string directoryPath = ConfigurationManager.AppSettings[ "RelativeDirectoryPath" ];
+            OriginalImage.ImageUrl = directoryPath + "kyain.jpg";
+        }
 
+        protected void Button1_Click( object sender, EventArgs e )
+        {
+            Response.Redirect( "WebForm1.aspx" );
         }
     }
 }

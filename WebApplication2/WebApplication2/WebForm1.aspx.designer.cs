@@ -38,32 +38,5 @@ namespace WebApplication2 {
         /// 変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button JudgeButton;
-        
-        /// <summary>
-        /// Panel コントロール。
-        /// </summary>
-        /// <remarks>
-        /// 自動生成されたフィールド。
-        /// 変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel;
-        
-        /// <summary>
-        /// ScoreBox コントロール。
-        /// </summary>
-        /// <remarks>
-        /// 自動生成されたフィールド。
-        /// 変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ScoreBox;
-        
-        /// <summary>
-        /// OriginalImage コントロール。
-        /// </summary>
-        /// <remarks>
-        /// 自動生成されたフィールド。
-        /// 変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image OriginalImage;
     }
 }

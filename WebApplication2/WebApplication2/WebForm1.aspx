@@ -17,10 +17,6 @@
         <p>
             <asp:Button ID="JudgeButton" runat="server" Height="65px" Text="判定ボタン" Width="542px" OnClick="JudgeButton_Click1" CssClass="btn btn-default" />
         </p>
-        <asp:Panel ID="Panel" runat="server">
-            <asp:TextBox ID="ScoreBox" runat="server"></asp:TextBox>
-            <asp:Image ID="OriginalImage" runat="server" Width="205px" />
-        </asp:Panel>
     </form>
 <%--<script>
   var player = document.getElementById('player');

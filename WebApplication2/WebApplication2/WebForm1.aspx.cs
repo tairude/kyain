@@ -45,11 +45,12 @@ namespace WebApplication2
                 );
                 
                 var score = GetScore( posted.FileName );
-                ScoreBox.Text = Math.Floor( score * 100 ).ToString();
+                string value = HttpUtility.UrlEncode( Math.Floor( score * 100 ).ToString() );
+                Response.Redirect( "Result.aspx?score=" + value );
             }
             else
             {
-                ScoreBox.Text = "ファイルを選択してください。";
+                // ファイル未選択時
             }
         }
 
