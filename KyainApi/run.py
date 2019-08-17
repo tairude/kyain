@@ -21,7 +21,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 app = flask.Flask(__name__)
 config = {
-    'image':'./images/kyain_2_2.jpg',
+    'image':'../KyainWeb/images/kyain.jpg',
     'model':'mobilenet_thin',
     'resize':'432x368',
     'resize_out_ratio': 4.0,
