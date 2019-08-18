@@ -67,7 +67,7 @@ def predict():
             human_pts_list[hid,i,0] = center[0]
             human_pts_list[hid,i,1] = center[1]
            
-    print(human_pts_list)
+    #print(human_pts_list)
 
     vec_list = np.zeros((len(humans),12,2))
     for hid in range(len(humans)):
@@ -76,18 +76,23 @@ def predict():
             vec_list[hid,i,1] = human_pts_list[hid,v[0],1] - human_pts_list[hid,v[1],1]
 
 
-    print(vec_list)
+    #print(vec_list)
 
     cos_list = np.zeros(12)
     for i in range(12):
         cos_list[i] = cos_sim(vec_list[0,i],vec_list[1,i])
         
-    print(cos_list)
-    print('score:',np.mean(cos_list))
+    #print(cos_list)
+    #print('score:',np.mean(cos_list))
 
     logger.info('inference image: %s in %.4f seconds.' % (config['image'], elapsed))
+    result_image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
-    image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+    try:
+        plt.imsave('../KyainWeb/images/kyain_result.jpg', cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB))
+    except:
+        pass
+
     response["prediction"] = np.mean(cos_list)
     response["success"] = True
     return flask.jsonify(response)
