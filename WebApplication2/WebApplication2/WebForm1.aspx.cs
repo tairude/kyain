@@ -39,9 +39,9 @@ namespace WebApplication2
             {
                 String directoryPath = ConfigurationManager.AppSettings[ "RelativeDirectoryPath" ];
                 string rootPath = MapPath("./");
+                // 固定ファイル名で保存する
                 posted.SaveAs(
-                    rootPath + directoryPath //Webサーバを指定
-                    + System.IO.Path.GetFileName( posted.FileName )
+                    rootPath + directoryPath + "kyain.jpg" //Webサーバを指定
                 );
                 
                 var score = GetScore( posted.FileName );

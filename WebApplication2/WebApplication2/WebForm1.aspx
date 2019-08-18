@@ -12,6 +12,7 @@
 <body>
     <form id="form1" runat="server" class="form-horizontal">
         <%--<video id="player" controls autoplay></video>--%>
+
         <div>
             <h1>キャイーン度メーカー</h1>
         </div>
