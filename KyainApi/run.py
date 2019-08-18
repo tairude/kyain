@@ -95,7 +95,8 @@ def predict():
             human_pts_list[hid,i,0] = center[0]
             human_pts_list[hid,i,1] = center[1]
            
-    print(human_pts_list)
+    # print(human_pts_list)
+    print(len(humans))
     if len(humans) == 2:
         vec_list = np.zeros((len(humans),12,2))
         for hid in range(len(humans)):
@@ -135,7 +136,7 @@ def predict():
         plt.imsave('../KyainWeb/images/kyain_result.jpg', cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB))
     except:
         pass
-        
+
     return flask.jsonify(response)
 
 if __name__ == '__main__':
