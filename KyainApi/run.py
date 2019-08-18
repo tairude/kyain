@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 import time
+import math
 
 from tf_pose import common
 import cv2
@@ -76,13 +77,14 @@ def predict():
             vec_list[hid,i,1] = human_pts_list[hid,v[0],1] - human_pts_list[hid,v[1],1]
 
 
-    #print(vec_list)
+    # print(vec_list)
 
     cos_list = np.zeros(12)
     for i in range(12):
         cos_list[i] = cos_sim(vec_list[0,i],vec_list[1,i])
         
-    #print(cos_list)
+    cos_list_fix = [x for x in cos_list if (math.isnan(x) == False)]
+    # print(cos_list)
     #print('score:',np.mean(cos_list))
 
     logger.info('inference image: %s in %.4f seconds.' % (config['image'], elapsed))
@@ -93,7 +95,7 @@ def predict():
     except:
         pass
 
-    response["prediction"] = np.mean(cos_list)
+    response["prediction"] = np.mean(cos_list_fix)
     response["success"] = True
     return flask.jsonify(response)
 
