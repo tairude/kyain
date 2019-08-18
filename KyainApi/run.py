@@ -5,9 +5,11 @@ import time
 
 from tf_pose import common
 import cv2
+import matplotlib.pyplot as plt
 import numpy as np
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
+import flask
 
 logger = logging.getLogger('TfPoseEstimatorRun')
 logger.handlers.clear()
@@ -17,25 +19,28 @@ ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
+app = flask.Flask(__name__)
+config = {
+    'image':'../KyainWeb/images/kyain.jpg',
+    'model':'mobilenet_thin',
+    'resize':'432x368',
+    'resize_out_ratio': 4.0,
+}
+vec_i = [(0,1),(4,3),(3,2),(2,5),(5,6),(6,7),(2,8),(5,11),(8,9),(9,10),(11,12),(12,13)]
+
+w, h = model_wh(config['resize'])
+e = TfPoseEstimator(get_graph_path(config['model']), target_size=(w, h)) 
 
 def cos_sim(v1, v2):
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
-
-if __name__ == '__main__':
-    config = {
-        'image':'./images/kyain_1_2.jpg',
-        'model':'mobilenet_thin',
-        'resize':'432x368',
-        'resize_out_ratio': 4.0,
+@app.route("/predict", methods=["GET"])
+def predict():
+    response = {
+        "success": False,
+        "Content-Type": "application/json"
     }
 
-    vec_i = [(0,1),(4,3),(3,2),(2,5),(5,6),(6,7),(2,8),(5,11),(8,9),(9,10),(11,12),(12,13)]
-
-    w, h = model_wh(config['resize'])
-    e = TfPoseEstimator(get_graph_path(config['model']), target_size=(w, h)) 
-
-    # estimate human poses from a single image !
     image = common.read_imgfile(config['image'], None, None)
 
     if image is None:
@@ -51,12 +56,14 @@ if __name__ == '__main__':
         # draw point
         for i in range(common.CocoPart.Background.value):
             if i not in human.body_parts.keys():
-                body_part.x = 0
-                body_part.y = 0
+                x = 0
+                y = 0
             else:
                 body_part = human.body_parts[i]
+                x = body_part.x
+                y = body_part.y
 
-            center = (int(body_part.x * image_w + 0.5), int(body_part.y * image_h + 0.5))
+            center = (int(x * image_w + 0.5), int(y * image_h + 0.5))
             human_pts_list[hid,i,0] = center[0]
             human_pts_list[hid,i,1] = center[1]
            
@@ -81,19 +88,10 @@ if __name__ == '__main__':
     logger.info('inference image: %s in %.4f seconds.' % (config['image'], elapsed))
 
     image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+    response["prediction"] = np.mean(cos_list)
+    response["success"] = True
+    return flask.jsonify(response)
 
-    try:
-        import matplotlib.pyplot as plt
-
-        fig = plt.figure()
-        a = fig.add_subplot(1, 1, 1)
-        a.set_title('Result')
-        plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        for human_pt in human_pts_list:
-            for h in human_pt:
-                plt.plot(h[0],h[1],marker='.')
-        plt.show()
-    except Exception as e:
-        logger.warning('matplitlib error, %s' % e)
-        cv2.imshow('result', image)
-        cv2.waitKey()
+if __name__ == '__main__':
+    print(" * Flask starting server...")
+    app.run()
