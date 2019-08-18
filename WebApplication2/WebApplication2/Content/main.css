@@ -1,0 +1,27 @@
+﻿body {
+    text-align: center;
+    height: 511px;
+}
+
+h1 {
+    text-align: center;
+    border-bottom: double 5px #FFC778;
+    font-weight: bold;
+    width: 484px;
+    height: 48px;
+    margin-left: 386px;
+}
+
+.JudgeButton {
+    font-family: Modern;
+    font-size:10px;
+}
+
+p {
+    text-align: center;
+}
+
+.uploadfile {
+    display: inline-block;
+    text-align: left;
+}
