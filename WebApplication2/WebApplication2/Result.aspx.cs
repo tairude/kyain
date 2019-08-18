@@ -18,7 +18,10 @@ namespace WebApplication2
 
             // キャプチャーした写真と、解析結果画像を表示する。
             string directoryPath = ConfigurationManager.AppSettings[ "RelativeDirectoryPath" ];
+
             OriginalImage.ImageUrl = directoryPath + "kyain.jpg";
+            AnalyzedImage.ImageUrl = directoryPath + "kyain_result.jpg";
+
         }
 
         protected void Button1_Click( object sender, EventArgs e )
